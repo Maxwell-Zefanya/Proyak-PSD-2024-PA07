@@ -96,8 +96,6 @@ BEGIN
                             END IF;
                             REPORT "CMP-I";
 
-                            -- CMP-R
-                            -- Bandingkan apabila isi dua register sama, hanya mengefek flag "equals"
                         WHEN "0001" =>
                             IF ((reg_dest_1 = reg_from_1) AND (NOT (reg_dest_1 = "11")) AND (NOT (reg_from_1 = "11"))) THEN
                                 EQ_FLAG <= '1';
@@ -138,6 +136,30 @@ BEGIN
                         WHEN "0111" =>
                             reg_temp := REG_DEST;
                             REG_DEST <= STD_LOGIC_VECTOR(shift_right(unsigned(reg_temp), to_integer(unsigned(REG_IMM))));
+
+                        WHEN "1000" =>
+                            IF equals = '1' THEN
+                                skip <= '0';
+                            ELSE
+                                skip <= '1';
+                            END IF;
+
+                        WHEN "1001" =>
+                            IF equals = '0' THEN
+                                skip <= '0';
+                            ELSE
+                                skip <= '1';
+                            END IF;
+
+                        WHEN "1010" =>
+                            REG_DEST <= REG_IMM;
+                            report "REG_DEST <= REG_IMM: "&std_logic'image(REG_IMM(7))&std_logic'image(REG_IMM(6))&std_logic'image(REG_IMM(5))&std_logic'image(REG_IMM(4))&std_logic'image(REG_IMM(3))&std_logic'image(REG_IMM(2))&std_logic'image(REG_IMM(1))&std_logic'image(REG_IMM(0));
+
+                        WHEN "1011" =>
+                            output_integer := to_integer(signed(REG_DEST));
+                            write(output_line, output_integer);
+                            writeline(output, output_line);
+                            REPORT "STO-R REG_DEST: " & INTEGER'image(to_integer(signed(REG_DEST)));
                 END IF;
             END IF;
         END IF;
