@@ -54,10 +54,7 @@ Immediate  = Value immediate (YYYYYY)
 ## Hasil Implementasi
 Hasil simulasi:  
 **Menggunakan program yang ada di HelloWorldProgram.txt**  
-
+![Screenshot 2024-12-08 180255](https://github.com/user-attachments/assets/625d4b72-4fe4-4427-ab81-289545d4e296)  
 
 Hasil sintesis:  
-
-
-## Kesimpulan (?)
-Test
+![Screenshot 2024-12-08 192518](https://github.com/user-attachments/assets/b348c336-18bb-43c3-b32e-78bff0103212)  
