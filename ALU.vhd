@@ -76,6 +76,8 @@ BEGIN
                     reg_temp := (OTHERS => '0'); -- Temporary register, untuk perhitungan
 
                     CASE OPCODE IS
+                            -- CMP-I
+                            -- Bandingkan apabila isi register dengan immediate (zero-fill) sama, hanya mengefek flag "equals"
                         WHEN "0000" =>
                             IF REG_DEST = REG_IMM THEN
                                 EQ_FLAG <= '1';
@@ -94,6 +96,8 @@ BEGIN
                             END IF;
                             REPORT "CMP-I";
 
+                            -- CMP-R
+                            -- Bandingkan apabila isi dua register sama, hanya mengefek flag "equals"
                         WHEN "0001" =>
                             IF ((reg_dest_1 = reg_from_1) AND (NOT (reg_dest_1 = "11")) AND (NOT (reg_from_1 = "11"))) THEN
                                 EQ_FLAG <= '1';
@@ -106,6 +110,35 @@ BEGIN
                                 EQ_FLAG <= '0';
                             END IF;
                             REPORT "CMP-R";
+
+                        WHEN "0010" =>
+                            reg_temp := STD_LOGIC_VECTOR(to_signed((to_integer(signed(REG_IMM)) + to_integer(signed(REG_DEST))), 16));
+                            REG_DEST <= reg_temp;
+                            REPORT "ADD-I REG_DEST: " & INTEGER'image(to_integer(signed(REG_DEST)));
+
+                        WHEN "0011" =>
+                            reg_temp := STD_LOGIC_VECTOR(to_signed((to_integer(signed(REG_DEST)) + to_integer(signed(REG_FROM))), 16));
+                            REG_DEST <= reg_temp;
+                            REPORT "ADD-R REG_DEST: " & INTEGER'image(to_integer(signed(REG_DEST)));
+
+                        WHEN "0100" =>
+                            reg_temp := STD_LOGIC_VECTOR(to_signed((to_integer(signed(REG_DEST)) - to_integer(signed(REG_IMM))), 16));
+                            REG_DEST <= reg_temp;
+                            REPORT "SUB-R REG_DEST: " & INTEGER'image(to_integer(signed(REG_DEST)));
+
+                        WHEN "0101" =>
+                            reg_temp := STD_LOGIC_VECTOR(to_signed((to_integer(signed(REG_DEST)) + to_integer(signed(REG_FROM))), 16));
+                            REG_DEST <= reg_temp;
+                            REPORT "SUB-I REG_DEST: " & INTEGER'image(to_integer(signed(REG_DEST)));
+
+                        WHEN "0110" =>
+                            reg_temp := REG_DEST;
+                            REG_DEST <= STD_LOGIC_VECTOR(shift_left(unsigned(reg_temp), to_integer(unsigned(REG_IMM))));
+
+                        WHEN "0111" =>
+                            reg_temp := REG_DEST;
+                            REG_DEST <= STD_LOGIC_VECTOR(shift_right(unsigned(reg_temp), to_integer(unsigned(REG_IMM))));
+                END IF;
             END IF;
         END IF;
     END PROCESS;
